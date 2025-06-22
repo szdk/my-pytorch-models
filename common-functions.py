@@ -1,3 +1,6 @@
+import os
+import requests
+
 def extractZip(zip_path, extract_to):
   if not os.path.isdir(extract_to):
     print("Extracting zip")
@@ -16,7 +19,6 @@ def loadFiles(directory):
   return file_list
 
 def downloadRemote(remote_url, download_to):
-  import requests
   response = requests.get(remote_url)
   with open(download_to, "w") as f:
       f.write(response.text)
