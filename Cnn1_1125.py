@@ -1,3 +1,6 @@
+
+import torch.nn as nn
+
 # window_size = 1125
 class Cnn1_1125(nn.Module):
     def __init__(self):
