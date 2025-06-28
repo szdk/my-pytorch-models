@@ -38,6 +38,7 @@ def trainModel(
     optimizer,
     batch_size,
     window_size,
+    output_size,
     train_split_perc,
     device
 ):
@@ -55,9 +56,9 @@ def trainModel(
         end = len(trainTensor)
         pbar = tqdm(total=(end-window_size))
         for i in range(window_size, end):
-          cur_sample = trainTensor[i-window_size:i]
+          cur_sample = trainTensor[i-window_size:i, :6]
           cur_batch_x.append(cur_sample.unsqueeze(0))
-          cur_batch_y.append(trainTensor[i, -1].unsqueeze(0))
+          cur_batch_y.append(trainTensor[i, -output_size:])
           if len(cur_batch_x) == batch_size or i == end-1:
             batches_trained += 1
             X = torch.stack(cur_batch_x).to(device)
