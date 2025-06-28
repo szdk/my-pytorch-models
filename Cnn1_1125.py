@@ -3,7 +3,7 @@ import torch.nn as nn
 
 # window_size = 1125
 class Cnn1_1125(nn.Module):
-    def __init__(self):
+    def __init__(self, outputLayers):
         super(Cnn1_1125, self).__init__()
 
         #nn.Conv2d(1, 8, kernel_size=(3, 6), stride=1, padding=(1, 0)),
@@ -27,7 +27,7 @@ class Cnn1_1125(nn.Module):
             nn.Flatten(),              # [B, 64*15*3 = 2880]
             nn.Linear(2880, 128),
             nn.ReLU(),
-            nn.Linear(128, 1)          # Final output: [B, 1]
+            nn.Linear(128, outputLayers)          # Final output: [B, 2]
         )
 
     def forward(self, x):
