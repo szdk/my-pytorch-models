@@ -27,7 +27,7 @@ class Cnn1_1125(nn.Module):
             nn.Flatten(),              # [B, 64*15*3 = 2880]
             nn.Linear(2880, 128),
             nn.ReLU(),
-            nn.Linear(128, outputLayers)          # Final output: [B, 2]
+            nn.Linear(128, outputLayers)          # Final output: [B, outputLayers]
         )
 
     def forward(self, x):
