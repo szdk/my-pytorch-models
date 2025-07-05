@@ -43,7 +43,7 @@ def trainModel(
     device
 ):
     model.train()
-    for file in files:
+    for file in tqdm(files):
         df = pd.read_csv(file).iloc[:, 1:]
         fullTensor = torch.tensor(df.values).float().to(device)
         trainTensor = fullTensor[:math.floor(len(fullTensor)*train_split_perc)]
