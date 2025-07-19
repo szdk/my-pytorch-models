@@ -150,5 +150,5 @@ def trainModelBalancedSingle(
             #pbar.update(len(cur_batch_x))
             cur_batch_x = []
             cur_batch_y = []
-            print(f"\ri : {i},\tLoss: {loss.item():.4f}", end="")
+            print(f"\ri : {i},\tLoss: {loss.item():.4f},\tMean Y: {Y.mean().item():.4f}", end="")
         #pbar.close()
