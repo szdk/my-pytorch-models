@@ -121,7 +121,7 @@ def trainModelBalancedSingle(
         cur_batch_y = []
         batches_trained = 0
 
-        end = len(trainTensor)
+        end = len(trainTensor) - 1
         pbar = tqdm(total=(end-window_size))
         i = window_size - 1
         while i < end:
