@@ -111,7 +111,6 @@ def trainModelBalancedSingle(
 ):
     model.train()
     for file in tqdm(files):
-        print(f"\n{file}\n")
         df = pd.read_csv(file).iloc[:, 1:]
         fullTensor = torch.tensor(df.values).float().to(device)
         trainTensor = fullTensor[:math.floor(len(fullTensor)*train_split_perc)]
@@ -149,5 +148,5 @@ def trainModelBalancedSingle(
             #pbar.update(len(cur_batch_x))
             cur_batch_x = []
             cur_batch_y = []
-            print(f"\rLoss: {loss.item():.4f}", end="")
+            print(f"\ri : {i},\tLoss: {loss.item():.4f}", end="")
         #pbar.close()
