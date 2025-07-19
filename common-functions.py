@@ -129,7 +129,7 @@ def trainModelBalancedSingle(
           if (random.random() < 0.5):
             continue
           if (trainTensor[i, -1].item() > 0.9):
-             continue
+            continue
           if (random.random() < 0.5):
             cur_sample = trainTensor[i-window_size:i, :6].unsqueeze(0)
             cur_batch_y.append(torch.tensor([0.0], device=device, dtype=torch.float32))
