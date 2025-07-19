@@ -126,6 +126,8 @@ def trainModelBalancedSingle(
         i = window_size - 1
         while i < end:
           i += 1
+          if (random.random() < 0.5):
+            continue
           if (trainTensor[i, -1].item() > 0.9):
              continue
           if (random.random() < 0.5):
