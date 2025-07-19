@@ -26,6 +26,7 @@ class Cnn1_1125(nn.Module):
         self.fc = nn.Sequential(
             nn.Flatten(),              # [B, 64*15*3 = 2880]
             nn.Linear(2880, 128),
+            nn.Dropout(0.5),
             nn.ReLU(),
             nn.Linear(128, outputLayers)          # Final output: [B, outputLayers]
         )
