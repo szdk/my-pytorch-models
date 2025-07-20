@@ -137,12 +137,15 @@ def trainModelBalancedSingle(
         batches_trained = 0
 
         end = len(trainTensor) - 1
-        pbar = tqdm(total=(end-window_size))
+        pbarLen = (end-window_size)
+        pbar = tqdm(total=pbarLen)
         i = window_size - 1
         while i < end:
           i += 1
+          if (random.random() < 0.7):
+            continue
           if (trainTensor[i, -1].item() > 0.9):
-             continue
+            continue
           if (random.random() < 0.5):
             cur_sample = trainTensor[i-window_size:i, :6].unsqueeze(0)
             cur_batch_y.append(torch.tensor([0.0], device=device, dtype=torch.float32))
@@ -161,8 +164,9 @@ def trainModelBalancedSingle(
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            pbar.update(len(cur_batch_x))
+            pbar.n = i
+            pbar.refresh()
             cur_batch_x = []
             cur_batch_y = []
-            print(f"\rLoss: {loss.item():.4f}", end="")
+            print(f"\ri : {i},\tLoss: {loss.item():.4f},\tMean Y: {Y.mean().item():.4f}", end="")
         pbar.close()
