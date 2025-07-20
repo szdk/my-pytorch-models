@@ -106,6 +106,7 @@ def getonesAll(window_size, files, train_split_perc, device):
         fullTensor = torch.tensor(df.values).float().to(device)
         trainTensor = fullTensor[:math.floor(len(fullTensor)*train_split_perc)]
         result.extend(getones(window_size, trainTensor))
+   print(f"Got {len(result)} 1.0s from {len(files)} files")
    return result
         
 
