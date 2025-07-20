@@ -92,6 +92,7 @@ def normalize_batchwise(X, feature_range=(0.0, 1.0)):
 
 
 def getones(window_size, trainTensor):
+    print(f"get ones tensor length{len(trainTensor)}")
     ones = []
     for i in range(window_size, len(trainTensor)):
         if (trainTensor[i, -1] > 0.9):
