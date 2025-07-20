@@ -98,6 +98,18 @@ def getones(window_size, trainTensor):
             ones.append(trainTensor[i-window_size:i, :6].unsqueeze(0))
     return ones
 
+def getonesAll(window_size, files, train_split_perc, device):
+   print(f"Getting 1.0s from {len(files)} files")
+   result = []
+   for file in files:
+        df = pd.read_csv(file).iloc[:, 1:]
+        fullTensor = torch.tensor(df.values).float().to(device)
+        trainTensor = fullTensor[:math.floor(len(fullTensor)*train_split_perc)]
+        result.extend(getones(window_size, trainTensor))
+   return result
+        
+
+
 #equalizes by signal (single predection)
 def trainModelBalancedSingle(
     files,
@@ -110,11 +122,12 @@ def trainModelBalancedSingle(
     device
 ):
     model.train()
+    ones = getonesAll(window_size, files, train_split_perc, device)
+    cursorOne = 0
     for file in tqdm(files):
         df = pd.read_csv(file).iloc[:, 1:]
         fullTensor = torch.tensor(df.values).float().to(device)
         trainTensor = fullTensor[:math.floor(len(fullTensor)*train_split_perc)]
-        ones = getones(window_size, trainTensor)
         print(f"\nLoaded {df.shape} from {file}")
         print(f"fullTensor: {fullTensor.shape}, trainTensor: {trainTensor.shape}")
         cur_batch_x = []
@@ -122,19 +135,18 @@ def trainModelBalancedSingle(
         batches_trained = 0
 
         end = len(trainTensor) - 1
-        #pbar = tqdm(total=(end-window_size))
+        pbar = tqdm(total=(end-window_size))
         i = window_size - 1
         while i < end:
           i += 1
-          if (random.random() < 0.5):
-            continue
           if (trainTensor[i, -1].item() > 0.9):
-            continue
+             continue
           if (random.random() < 0.5):
             cur_sample = trainTensor[i-window_size:i, :6].unsqueeze(0)
             cur_batch_y.append(torch.tensor([0.0], device=device, dtype=torch.float32))
           else:
-            cur_sample = random.choice(ones).clone()
+            cur_sample = ones[cursorOne % len(ones)].clone()
+            cursorOne += 1
             cur_batch_y.append(torch.tensor([1.0], device=device, dtype=torch.float32))
             i -= 1
           cur_batch_x.append(cur_sample)
@@ -147,8 +159,8 @@ def trainModelBalancedSingle(
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            #pbar.update(len(cur_batch_x))
+            pbar.update(len(cur_batch_x))
             cur_batch_x = []
             cur_batch_y = []
-            print(f"\ri : {i},\tLoss: {loss.item():.4f},\tMean Y: {Y.mean().item():.4f}", end="")
-        #pbar.close()
+            print(f"\rLoss: {loss.item():.4f}", end="")
+        pbar.close()
